@@ -6,10 +6,10 @@ class Play extends Phaser.Scene {
     }
     preload() {
         // load background music
-        this.load.audio('sfx_select', './assets/blip_select12.wav');
-        this.load.audio('sfx_explosion', './assets/stab.wav'); //https://freesound.org/people/InspectorJ/sounds/413496/
-        this.load.audio('sfx_rocket', './assets/throw.wav'); //https://freesound.org/people/kylepyke/sounds/196562/
-        this.load.audio('bg','./assets/skymusic.wav'); //https://freesound.org/people/dkiller2204/sounds/423133/
+        this.load.audio('sfx_power', './assets/powerup.wav'); //https://freesound.org/people/evan.schad/sounds/470768/
+        this.load.audio('sfx_coin', './assets/collectcoin.wav'); //https://freesound.org/people/bradwesson/sounds/135936/ 
+        this.load.audio('sfx_jump', './assets/small-jump-for-videogames.wav'); //https://freesound.org/people/simoneyoh3998/sounds/500675/
+        this.load.audio('bg','./assets/horror-music.wav'); //https://freesound.org/people/theojt/sounds/510950/ 
        
 
         // load images/tile sprites
@@ -22,19 +22,20 @@ class Play extends Phaser.Scene {
         this.load.image('background','./assets/cavernous.png'); //https://opengameart.org/content/cavernous-background
         
         // load spritesheet
-        this.load.spritesheet('explosion','./assets/boom.png',{frameWidth: 192, frameheight: 191, startFrame: 0, endFrame: 20}); //https://www.subpng.com/png-1mtyxe/
+        this.load.spritesheet('coin','./assets/spin_coin_big_strip6.png',{frameWidth: 192, frameheight: 191, startFrame: 0, endFrame: 20});
     }
 
     create() {
         // play music
-        //this.bgm = this.sound.add('bg');
-        //this.bgm.loop = true;
-        //this.bgm.play();
+        this.bgm = this.sound.add('bg');
+        this.bgm.loop = true;
+        this.bgm.play();
 
         // let music = this.sound.add('sfx_music');
         // music.play();
     
         // place tile sprite
+        this.starfield = this.add.tileSprite(0,0,980,980,'background').setScale(1.66,1.66).setOrigin(0,0); 
         
         // UI to keep track of points
        
@@ -67,7 +68,9 @@ class Play extends Phaser.Scene {
 
         
         //score position
-        this.scoreLeft = this.add.text(5, 5, this.p1Score, scoreConfig)
+        this.scoreLeft = this.add.text(5, 5, this.p1Score, scoreConfig);
+
+        
         
         // Time UI
     
@@ -90,17 +93,22 @@ class Play extends Phaser.Scene {
 
     update() {
 
-        //timer going down each second
-        game.settings.gameTimer = game.settings.gameTimer - 100;
+        //show timer
+        if (this.gameOver == false){
+            this.timerRight = this.add.text(400,5,game.settings.gameTimer/1000,scoreConfig);
+        }else{
+            this.timerRight = this.add.text(400,5,0.000,scoreConfig); 
+        }
 
+        //timer going down each second
+        game.settings.gameTimer = game.settings.gameTimer - 17;
+
+        //move to death scene once timer runs out
         if(game.settings.gameTimer <= 0){
             this.gameOver = true;
-
-            //move to death scene once timer runs out
-            //music.stop();
-            //this.bgm.pause();
+            this.bgm.pause();
             //this.add.text(game.config.width/2, game.config.height/2 + 100, "Current Highscore: "+localStorage.getItem("highscore"),highScoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, '<- to Restart or -> for Menu', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2, '<- to Restart or -> for Menu', deathConfig).setOrigin(0.5);
 
             // check for input during death scene
             if(Phaser.Input.Keyboard.JustDown(keyLEFT)){
@@ -112,28 +120,29 @@ class Play extends Phaser.Scene {
         
         }
           
-            //Tracking highscore
-            /*var highScore = localStorage.getItem("highscore");
-            if(highScore == null){
-              localStorage.setItem("highscore", 0);
-              highScore = 0;
-            }
-            else if(this.p1Score > highScore){
-                localStorage.setItem("highscore", this.p1Score);
-            }
-            */
+        //Tracking highscore
+        /*var highScore = localStorage.getItem("highscore");
+        if(highScore == null){
+          localStorage.setItem("highscore", 0);
+          highScore = 0;
+        }
+        else if(this.p1Score > highScore){
+            localStorage.setItem("highscore", this.p1Score);
+        }
+        */
 
-            // check key input for restart during the game
-            if(Phaser.Input.Keyboard.JustDown(keyR)){
-
-                //resets score
-                this.scene.restart(this.p1Score);
-
-                this.scene.start('playScene');
-          
-            }
-        
-            // check collisions
+        // check key input for restart during the game
+        if(Phaser.Input.Keyboard.JustDown(keyR)){
+            
+            //resets score
+            this.scene.restart(this.p1Score);
+            game.settings.gameTimer = 15000;
+            this.scene.start('playScene');
+      
+        }
+        this.p1Betty.update();
+    
+        // check collisions
         
         
       

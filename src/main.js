@@ -27,6 +27,19 @@ let scoreConfig = {
     fixedWidth: 100
 }
 
+let deathConfig = {
+  fontFamily: 'Courier',
+  fontSize: '28px',
+  backgroundColor: '#6B7177',
+  color: '#d4d4d4',
+  align: 'center',
+  padding: {
+      top: 3,
+      bottom: 3,
+  },
+  fixedWidth: 600
+}
+
   // reserve keyboard vars
 let keyR, keyLEFT, keyRIGHT, keySPACE;
 

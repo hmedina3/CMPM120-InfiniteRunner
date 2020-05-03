@@ -6,10 +6,10 @@ class Betty extends Phaser.GameObjects.Sprite{
 
         
         scene.add.existing(this); //add object to existing scene
-        this.isJumping = false; // track rocket's firing status
+        this.isJumping = false; // track betty's jump status
 
         //adds audio
-        this.sfxRocket = scene.sound.add('sfx_rocket');
+        this.sfxJump = scene.sound.add('sfx_jump');
     }
 
     update(){
@@ -31,7 +31,7 @@ class Betty extends Phaser.GameObjects.Sprite{
         //      must manually do it to fire
         if (Phaser.Input.Keyboard.JustDown(keySPACE) && !this.isJumping){
             this.isJumping = true;
-            this.sfxRocket.play(); // play sfx
+            this.sfxJump.play(); // play sfx
         }
 
         //if jumping, move up
