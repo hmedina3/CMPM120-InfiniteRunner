@@ -11,6 +11,10 @@ let config = {
     height: 480,
     //scene: [Menu, Play]
     scene: [Play],
+    physics:{
+        default: 'arcade',
+        arcade: {debug:true} //debug put boxes over your objects w/ physics and velocity
+    }
 }
 
 // score display

@@ -40,14 +40,18 @@ class Play extends Phaser.Scene {
         // UI to keep track of points
        
         // add blocks / death pits
-        
+        let ground = this.physics.add.sprite(game.config.width/2,game.config.height*.95, 'ground');
+        ground.displayWidth = game.config.width*1.1;
+        ground.setImmovable();
 
         // borders?
         
         // main character postion
-        this.p1Betty = new Betty(this, game.config.width/2,350,'betty').setScale(1.5,1.5).setOrigin(0,0);
-       
+        this.p1Betty = new Betty(this,30,380,'betty').setScale(1.5,1.5).setOrigin(0,0);
+
         // define movement
+        this.physics.add.collider(this.p1Betty,ground);
+
         //define keyboard keys
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);

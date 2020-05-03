@@ -4,25 +4,25 @@ class Betty extends Phaser.GameObjects.Sprite{
     constructor(scene, x, y, texture, frame){
         super(scene, x, y, texture, frame);
 
-        
-        scene.add.existing(this); //add object to existing scene
+        //setting physics and gravity
+        scene.physics.add.existing(this); //add object to existing scene
+        this.body.gravity.y = 100; //this.setGravityY(100);
         this.isJumping = false; // track betty's jump status
 
         //adds audio
         this.sfxJump = scene.sound.add('sfx_jump');
+        
     }
 
     update(){
         // left/right movement
-        if(!this.isJumping){
-            //this.x >= 47 is to prevent rocket from passing border
-            if(keyLEFT.isDown && this.x >= 47){
-                //speed depends on this
-                this.x -= 2;
-            }else if (keyRIGHT.isDown && this.x <= 578){
-                this.x += 2;
-            }
+        if(keyLEFT.isDown && this.x >= 0){
+            //speed depends on this
+            this.x -= 2;
+        }else if (keyRIGHT.isDown && this.x <= 600){
+            this.x += 2;
         }
+        
 
         // jump button (spacebar)
         // isDown =  if it was pressed this frame, do this
@@ -31,33 +31,19 @@ class Betty extends Phaser.GameObjects.Sprite{
         //      must manually do it to fire
         if (Phaser.Input.Keyboard.JustDown(keySPACE) && !this.isJumping){
             this.isJumping = true;
+            this.jump();
             this.sfxJump.play(); // play sfx
         }
 
-        //if jumping, move up
-        if(this.isJumping && this.y >= 108){
-            this.y -= 2;
-
-            //Allows the player to control the fork after it's fired
-            if(keyLEFT.isDown && this.x >= 47){
-                //speed depends on this
-                this.x -= 2;
-            }else if (keyRIGHT.isDown && this.x <= 578){
-                this.x += 2;
-            }
+        //only allow jump if betty is touching ground (to prevent double jump)
+        if(this.body.velocity.y ==0){
+            this.isJumping = false;
         }
 
-        // reset on miss
-        if(this.y <= 10){
-            //this.y = 431;
-            this.reset();
-        }
     }
 
-    // reset rocket to "ground"
-    reset(){
-        this.isJumping = false;
-        this.y = 350; //431
+    jump(){
+        this.body.velocity.y = -150; //setVelocityY(-100)
     }
 
 }
