@@ -5,8 +5,9 @@ class Betty extends Phaser.GameObjects.Sprite{
         super(scene, x, y, texture, frame);
 
         //setting physics and gravity
-        scene.physics.add.existing(this); //add object to existing scene
-        this.body.gravity.y = 100; //this.setGravityY(100);
+        //scene.physics.add.existing(this); //add object to existing scene
+        scene.add.existing(this); //add object to existing scene
+        //this.body.gravity.y = 100; //this.setGravityY(100);
         this.isJumping = false; // track betty's jump status
 
         //adds audio

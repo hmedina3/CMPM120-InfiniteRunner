@@ -1,6 +1,5 @@
 class Play extends Phaser.Scene {
      
- 
     constructor() {
         super("playScene");
     }
@@ -40,17 +39,30 @@ class Play extends Phaser.Scene {
         // UI to keep track of points
        
         // add blocks / death pits
-        let ground = this.physics.add.sprite(game.config.width/2,game.config.height*.95, 'ground');
-        ground.displayWidth = game.config.width*1.1;
-        ground.setImmovable();
+        //let ground = this.physics.add.sprite(game.config.width/2,game.config.height*.95, 'ground');
+
+        //trying something right here
+        this.ground1 = new Ground(this,game.config.width/2,game.config.height*.95,'ground');
+        this.physics.add.existing(this.ground1);
+        this.ground2 = new Ground(this,50,game.config.height*.95,'ground');
+        this.physics.add.existing(this.ground2);
+        this.ground1.body.immovable = true;
+        this.ground2.body.immovable = true;
+
+        //ground.displayWidth = game.config.width*1.1;
+        //ground.setImmovable();
 
         // borders?
         
         // main character postion
         this.p1Betty = new Betty(this,30,380,'betty').setScale(1.5,1.5).setOrigin(0,0);
+        this.physics.add.existing(this.p1Betty); //adding physics to betty
+        this.p1Betty.body.setSize(30,32,0,0); //setting collision box size
+        this.p1Betty.body.gravity.y = 100; //adding gravity
 
-        // define movement
-        this.physics.add.collider(this.p1Betty,ground);
+        // define movement and colliders
+        this.physics.add.collider(this.p1Betty,this.ground1);
+        this.physics.add.collider(this.p1Betty,this.ground2);
 
         //define keyboard keys
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -107,10 +119,10 @@ class Play extends Phaser.Scene {
         //timer going down each second
         game.settings.gameTimer = game.settings.gameTimer - 17;
 
-        //move to death scene once timer runs out
-        if(game.settings.gameTimer <= 0){
+        //move to death scene once timer runs out or if betty runs into death pits
+        if(game.settings.gameTimer <= 0 || this.p1Betty.y > game.config.height){
             this.gameOver = true;
-            this.bgm.pause();
+            this.bgm.stop();
             //this.add.text(game.config.width/2, game.config.height/2 + 100, "Current Highscore: "+localStorage.getItem("highscore"),highScoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2, '<- to Restart or -> for Menu', deathConfig).setOrigin(0.5);
 
@@ -138,9 +150,10 @@ class Play extends Phaser.Scene {
         // check key input for restart during the game
         if(Phaser.Input.Keyboard.JustDown(keyR)){
             
-            //resets score
+            //resets score and timer
             this.scene.restart(this.p1Score);
             game.settings.gameTimer = 15000;
+            this.bgm.destroy();
             this.scene.start('playScene');
       
         }
