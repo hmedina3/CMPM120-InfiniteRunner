@@ -24,7 +24,7 @@ class Betty extends Phaser.GameObjects.Sprite{
             }
         }
 
-        // fire button ( NOT spacebar)
+        // jump button (spacebar)
         // isDown =  if it was pressed this frame, do this
         // JustDown = if it was pressed last frame, do this; this is
         //      to prevent player from holding down F to fire, they 
@@ -34,7 +34,7 @@ class Betty extends Phaser.GameObjects.Sprite{
             this.sfxRocket.play(); // play sfx
         }
 
-        //if fired, move up
+        //if jumping, move up
         if(this.isJumping && this.y >= 108){
             this.y -= 2;
 

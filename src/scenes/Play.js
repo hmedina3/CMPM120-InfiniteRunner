@@ -9,6 +9,7 @@ class Play extends Phaser.Scene {
         this.load.audio('sfx_select', './assets/blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/stab.wav'); //https://freesound.org/people/InspectorJ/sounds/413496/
         this.load.audio('sfx_rocket', './assets/throw.wav'); //https://freesound.org/people/kylepyke/sounds/196562/
+        this.load.audio('bg','./assets/skymusic.wav'); //https://freesound.org/people/dkiller2204/sounds/423133/
        
 
         // load images/tile sprites
@@ -26,6 +27,10 @@ class Play extends Phaser.Scene {
 
     create() {
         // play music
+        //this.bgm = this.sound.add('bg');
+        //this.bgm.loop = true;
+        //this.bgm.play();
+
         // let music = this.sound.add('sfx_music');
         // music.play();
     
@@ -58,19 +63,8 @@ class Play extends Phaser.Scene {
         // score
         this.p1Score = 0
 
-        // score display
-        let scoreConfig = {
-          fontFamily: 'Courier',
-          fontSize: '28px',
-          backgroundColor: '#Ff4343',
-          color: '#F3B141',
-          align: 'right',
-          padding: {
-              top: 3,
-              bottom: 3,
-          },
-          fixedWidth: 100
-        }
+        // score display moved to main.js
+
         
         //score position
         this.scoreLeft = this.add.text(5, 5, this.p1Score, scoreConfig)
@@ -97,14 +91,15 @@ class Play extends Phaser.Scene {
     update() {
 
         //timer going down each second
-        game.settings.gameTimer = game.settings.gameTimer - 1000;
+        game.settings.gameTimer = game.settings.gameTimer - 100;
 
         if(game.settings.gameTimer <= 0){
             this.gameOver = true;
 
             //move to death scene once timer runs out
-            music.stop();
-            this.add.text(game.config.width/2, game.config.height/2 + 100, "Current Highscore: "+localStorage.getItem("highscore"),highScoreConfig).setOrigin(0.5);
+            //music.stop();
+            //this.bgm.pause();
+            //this.add.text(game.config.width/2, game.config.height/2 + 100, "Current Highscore: "+localStorage.getItem("highscore"),highScoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, '<- to Restart or -> for Menu', scoreConfig).setOrigin(0.5);
 
             // check for input during death scene

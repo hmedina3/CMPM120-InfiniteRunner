@@ -9,11 +9,26 @@ let config = {
     type: Phaser.AUTO,
     width: 640,
     height: 480,
-    scene: [Menu, Play]
-  }
+    //scene: [Menu, Play]
+    scene: [Play],
+}
+
+// score display
+let scoreConfig = {
+    fontFamily: 'Courier',
+    fontSize: '28px',
+    backgroundColor: '#Ff4343',
+    color: '#F3B141',
+    align: 'right',
+    padding: {
+        top: 3,
+        bottom: 3,
+    },
+    fixedWidth: 100
+}
 
   // reserve keyboard vars
-let keyF, keyLEFT, keyRIGHT;
+let keyR, keyLEFT, keyRIGHT, keySPACE;
 
 let game = new Phaser.Game(config); 
 
