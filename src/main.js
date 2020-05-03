@@ -13,13 +13,14 @@ let config = {
   }
 
   // reserve keyboard vars
-let keyF, keyLEFT, keyRIGHT;
+let keyR, keySPACE, keyLEFT, keyRIGHT;
 
 let game = new Phaser.Game(config); 
 
 // define game settings
 game.settings = {
-  gameTimer: 15000,
-  
+  gameTimer: 15000, 
 }
+
+let music;
 
