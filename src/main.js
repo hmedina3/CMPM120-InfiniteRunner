@@ -16,8 +16,10 @@ let config = {
 let keyF, keyLEFT, keyRIGHT;
 
 let game = new Phaser.Game(config); 
+
 // define game settings
 game.settings = {
+  gameTimer: 15000,
   
 }
 
