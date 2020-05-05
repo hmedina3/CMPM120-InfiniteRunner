@@ -20,14 +20,41 @@ let config = {
 let scoreConfig = {
     fontFamily: 'Courier',
     fontSize: '28px',
-    backgroundColor: '#Ff4343',
-    color: '#F3B141',
+    backgroundColor: '#a5c3cf',
+    color: '#4b88b0',
     align: 'right',
     padding: {
         top: 3,
         bottom: 3,
     },
     fixedWidth: 100
+}
+
+// timer display
+let timerConfig = {
+  fontFamily: 'Courier',
+  fontSize: '28px',
+  backgroundColor: '#a5c3cf',
+  color: '#4b88b0',
+  align: 'right',
+  padding: {
+      top: 3,
+      bottom: 3,
+  },
+  fixedWidth: 100
+}
+
+let highScoreConfig = {
+  fontFamily: 'Impact',
+  fontSize: '35px',
+  backgroundColor: '#545176',
+  color: '#f0eae5',
+  align: 'center',
+  padding: {
+      top: 15,
+      bottom: 15,
+  },
+  fixedWidth: 350
 }
 
 let deathConfig = {
@@ -40,7 +67,7 @@ let deathConfig = {
       top: 3,
       bottom: 3,
   },
-  fixedWidth: 600
+  fixedWidth: 500
 }
 
   // reserve keyboard vars

@@ -17,8 +17,17 @@ class Play extends Phaser.Scene {
        
         // load images/tile sprites
         this.load.image('betty','./assets/betty1.png'); //https://opengameart.org/content/one-more-lpc-alternate-character
+<<<<<<< HEAD
         this.load.image('ground','./assets/RockTileSet2020.png'); // https://opengameart.org/content/stone-ground
             
+=======
+        this.load.image('ground','./assets/blocks_prev.png'); //https://opengameart.org/content/platformer-rock-blocks
+        this.load.image('clock','./assets/Monsters_2/AlarmClock/AlarmClock_32x32_blue_damage_R.png'); //https://opengameart.org/content/cute-sprites-pack-1 
+        this.load.image('score_icon','./assets/star_coin_animation_Pack/star_coin_shine/star_coin_1.png');
+
+        // load borders
+        
+>>>>>>> 9da933607ad970b83327f5ba96356754d6de4fe0
         // background picture
         this.load.image('background','./assets/cavernous.png'); //https://opengameart.org/content/cavernous-background
         
@@ -27,6 +36,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+<<<<<<< HEAD
 
       // This will make the background move as a parallax scroller. - H.
       this.bg_1 = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background');
@@ -45,22 +55,26 @@ class Play extends Phaser.Scene {
     // since this tile is shorter I positioned it at the bottom of the screen
         this.ground.y = 12 * 32.5;
 
+=======
+        // play bg music
+        this.bgm = this.sound.add('bg');
+        this.bgm.loop = true;
+        this.bgm.play();
+    
+        // place tile sprite and images
+        this.starfield = this.add.tileSprite(0,0,980,980,'background').setScale(1.66,1.66).setOrigin(0,0); 
+        this.clock = this.add.image(380,20,'clock');
+        this.score_icon = this.add.image(33,25,'score_icon').setScale(.100,.100);
+>>>>>>> 9da933607ad970b83327f5ba96356754d6de4fe0
         
         // UI to keep track of points
        
         // add blocks / death pits
-        //let ground = this.physics.add.sprite(game.config.width/2,game.config.height*.95, 'ground');
-
-        //trying something right here
         this.ground1 = new Ground(this,game.config.width/2,game.config.height*.95,'ground');
         this.physics.add.existing(this.ground1);
         this.ground2 = new Ground(this,50,game.config.height*.95,'ground');
         this.physics.add.existing(this.ground2);
-        this.ground1.body.immovable = true;
-        this.ground2.body.immovable = true;
-
         //ground.displayWidth = game.config.width*1.1;
-        //ground.setImmovable();
 
         // borders?
         
@@ -84,6 +98,7 @@ class Play extends Phaser.Scene {
         // score
         this.p1Score = 0
 
+<<<<<<< HEAD
         // score display
         let scoreConfig = {
           fontFamily: 'Helvetica',
@@ -97,6 +112,14 @@ class Play extends Phaser.Scene {
           },
           fixedWidth: 60
         }
+=======
+        // score display moved to main.js
+
+        
+        //score position
+        this.scoreLeft = this.add.text(55, 5, this.p1Score, scoreConfig);
+
+>>>>>>> 9da933607ad970b83327f5ba96356754d6de4fe0
         
         // score position
         this.scoreLeft = this.add.text(5, 5, this.p1Score, scoreConfig)
@@ -111,16 +134,34 @@ class Play extends Phaser.Scene {
         // scrolls the background
          this.bg_1.tilePositionX += 0.3;
 
+<<<<<<< HEAD
         // timer going down each second
         game.settings.gameTimer = game.settings.gameTimer - 1000;
+=======
+        //show timer
+        if (this.gameOver == false){
+            this.timerRight = this.add.text(400,5,game.settings.gameTimer/1000,timerConfig);
+        }else{
+            this.timerRight = this.add.text(400,5,0.000,timerConfig); 
+        }
+
+        //timer going down each second
+        game.settings.gameTimer = game.settings.gameTimer - 17;
+>>>>>>> 9da933607ad970b83327f5ba96356754d6de4fe0
 
         // move to death scene once timer runs out or if betty runs into death pits
         if(game.settings.gameTimer <= 0 || this.p1Betty.y > game.config.height){
             this.gameOver = true;
+<<<<<<< HEAD
          // move to death scene once timer runs out
             music.stop();
             this.add.text(game.config.width/2, game.config.height/2 + 100, "Current Highscore: "+localStorage.getItem("highscore"),highScoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, '<- to Restart or -> for Menu', scoreConfig).setOrigin(0.5);
+=======
+            this.bgm.stop();
+            this.add.text(game.config.width/2, game.config.height/4 + 50, 'Current Highscore: ' + localStorage.getItem("highscore"),highScoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 50, '<- to Restart or -> for Menu', deathConfig).setOrigin(0.5);
+>>>>>>> 9da933607ad970b83327f5ba96356754d6de4fe0
 
             // check for input during death scene
             if(Phaser.Input.Keyboard.JustDown(keyLEFT)){
@@ -133,7 +174,7 @@ class Play extends Phaser.Scene {
         }
           
         //Tracking highscore
-        /*var highScore = localStorage.getItem("highscore");
+        var highScore = localStorage.getItem("highscore");
         if(highScore == null){
           localStorage.setItem("highscore", 0);
           highScore = 0;
@@ -141,7 +182,7 @@ class Play extends Phaser.Scene {
         else if(this.p1Score > highScore){
             localStorage.setItem("highscore", this.p1Score);
         }
-        */
+        
 
         // check key input for restart during the game
         if(Phaser.Input.Keyboard.JustDown(keyR)){
@@ -153,7 +194,11 @@ class Play extends Phaser.Scene {
             this.scene.start('playScene');
       
         }
-        this.p1Betty.update();
+
+        //extended class update
+        this.p1Betty.update(); // runs update function in Betty.js
+        this.ground1.update();
+        this.ground2.update();
     
         // check collisions
         
