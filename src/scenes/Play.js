@@ -17,16 +17,17 @@ class Play extends Phaser.Scene {
         this.load.image('betty','./assets/betty1.png'); //https://opengameart.org/content/one-more-lpc-alternate-character
         this.load.image('ground','./assets/RockTileSet2020.png'); // https://opengameart.org/content/stone-ground
         this.load.image('shoe','./assets/shoe.png');
-        
-        //icons
+       
+        // icons for UI
         this.load.image('clock','./assets/Monsters_2/AlarmClock/AlarmClock_32x32_blue_damage_R.png'); //https://opengameart.org/content/cute-sprites-pack-1 
         this.load.image('score_icon','./assets/star_coin_animation_Pack/star_coin_shine/star_coin_1.png');
     
         // background picture
         this.load.image('background','./assets/cavernous.png'); //https://opengameart.org/content/cavernous-background
         
-        // load spritesheet
+        // load spritesheet for coins 
         this.load.spritesheet('coin','./assets/spin_coin_big_upscale_strip6.png',{frameWidth: 18, frameheight: 20, startFrame: 0, endFrame: 20});
+        
         
         
     }
@@ -39,7 +40,7 @@ class Play extends Phaser.Scene {
         this.bg_1.setOrigin(0, 0);
         this.bg_1.setScrollFactor(0);
 
-        //adding sound effects
+        // adding sound effects
         this.sfxCoin = this.sound.add('sfx_coin');
         this.sfxShoe = this.sound.add('sfx_power');
 
@@ -54,7 +55,7 @@ class Play extends Phaser.Scene {
         this.ground.setScrollFactor(0);
         this.physics.add.existing(this.ground);
 
-        //score and timer icon
+        // score and timer icon
         this.clock = this.add.image(380,20,'clock');
         this.score_icon = this.add.image(33,25,'score_icon').setScale(.100,.100)
 
@@ -62,24 +63,30 @@ class Play extends Phaser.Scene {
         // since this tile is shorter I positioned it at the bottom of the screen
         this.ground.y = 12 * 32.5;
         
-        //coins and powerups
-        this.coin = this.add.sprite(200,300,'coin'); //adding coins at x and y axis
+        // coins and powerups
+        // animation configs
+        this.anims.create({
+            key: 'rotate',
+            frames: this.anims.generateFrameNumbers('coin',{start:0, end: 5, first: 0}),
+            framerate: 30,
+            repeat: -1,
+        });
+        
+        
+        // adding coins at y and x axis
+        this.coin = this.add.sprite(100,300,'coin');
+        this.coin.anims.play('rotate', true);
         this.physics.add.existing(this.coin);
+
         this.shoe = this.add.sprite(300,300,'shoe');
         this.physics.add.existing(this.shoe);
 
-        
-        // UI to keep track of points
-       
         // add blocks / death pits
         this.ground1 = new Ground(this,game.config.width/2,game.config.height*.95,'ground');
         this.physics.add.existing(this.ground1);
         this.ground2 = new Ground(this,50,game.config.height*.95,'ground');
         this.physics.add.existing(this.ground2);
-        //ground.displayWidth = game.config.width*1.1;
 
-        // borders?
-        
         // main character postion
         this.p1Betty = new Betty(this, game.config.width/2,300,'betty').setScale(1.5,1.5).setOrigin(0,0);
         this.physics.add.existing(this.p1Betty); //adding physics to betty
@@ -90,67 +97,83 @@ class Play extends Phaser.Scene {
         this.physics.add.collider(this.p1Betty,this.ground1);
         this.physics.add.collider(this.p1Betty,this.ground2);
         this.physics.add.collider(this.p1Betty,this.ground);
-       
+        
         // define keyboard keys for movement
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R); 
-        
-        // animation configs
-        this.anims.create({
-            key: 'rotate',
-            frames: this.anims.generateFrameNumbers('coin',{start:0, end: 5, first: 0}),
-            framerate: 30,
-            repeat: -1,
-        })
-        this.coin.anims.play('rotate', true);
-        
-
-        // UI to keep track of points
-
+        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+         
         // score
         this.p1Score = 0
 
-        
         // Time UI
-    
+        this.timer = this.formatTime(game.settings.gameTimer);
+        this.timerRight = this.add.text(400,5,this.timer,timerConfig);
+        let timeInSeconds;
+        timeInSeconds = this.time.addEvent({delay:1000, callback: this.onEvent, callbackScope: this, loop:true})
+       
+        // when player collects coins
+            let x = 15;
+            let y = 300;
+            switch (Phaser.Math.Between(0, 1)) {
+                case 0: x = Phaser.Math.Between(15, this.game.renderer.width);
+                    break;
+                case 1: y = 300;
+            }
+            // spawn 2
+            this.group = this.physics.add.group();
+            for (let i = 0; i < 2; i++) {
+                
+                this.group.add(this.add.sprite(x,y,'coin'));
+                
+            }
+            for (let i = 0; i <this.group.getChildren().length; i++) {
+                this.coin = this.group.getChildren()[i];
+                this.coin.anims.play('rotate', true);
+                this.physics.add.existing(this.coin);
+                this.physics.add.overlap(this.p1Betty, this.coin, this.pickCoin(this.group.getChildren()[i]), null, this);
+            }
+
+            
+
+         // game ends
         this.gameOver = false;
 
     }   // end of create
 
+    
+    pickCoin(coin){   
+        this.p1Score += 1;
+        this.timer += 10;
+        this.bg_1.tilePositionX++;
+        this.sfxCoin.play();
+        coin.destroy();
+      } 
+   
+
     update() {
 
-        //overlap detection with powerups and coins
-        this.physics.add.overlap(this.p1Betty,this.coin,this.pickCoin,null,this);
+        // overlap detection with powerups and coins
+      //  this.physics.add.overlap(this.p1Betty,this.coin,this.pickCoin,null,this);
+
         this.physics.add.overlap(this.p1Betty,this.shoe,this.pickShoe,null,this); 
 
-        //making ground immovable
+        // making ground immovable
         this.ground.body.immovable = true;
 
         // scrolls the background
-         this.bg_1.tilePositionX += 0.3;
-
-        //show score
-        //this.scoreLeft = this.add.text(55, 5, this.p1Score, scoreConfig);
+        this.bg_1.tilePositionX += 0.3;
+        
+        // show score
         this.scoreLeft = this.add.text(55, 5, this.p1Score, scoreConfig);
 
-        //show timer
-        if (this.gameOver == false){
-            this.timerRight = this.add.text(400,5,game.settings.gameTimer/1000,timerConfig);
-        }else{
-            this.timerRight = this.add.text(400,5,0.000,timerConfig); 
-        }
-
-        //timer going down each second
-        game.settings.gameTimer = game.settings.gameTimer - 17;
-
-        //move to death scene once timer runs out or if betty runs into death pits
-        if(game.settings.gameTimer <= 0 || this.p1Betty.y > game.config.height){
+        // move to death scene once timer runs out or if betty runs into death pits
+        if(this.timer <= 0 || this.p1Betty.y > game.config.height){
             this.gameOver = true;
             this.bgm.stop();
             this.add.text(game.config.width/2, game.config.height/4 + 50, 'Current Highscore: ' + localStorage.getItem("highscore"),highScoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 50, '<- to Restart or -> for Menu', deathConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 50, '← to Restart or → for Menu', deathConfig).setOrigin(0.5);
 
             // check for input during death scene
             if(Phaser.Input.Keyboard.JustDown(keyLEFT)){
@@ -165,8 +188,8 @@ class Play extends Phaser.Scene {
         
         }
           
-        //Tracking highscore
-        var highScore = localStorage.getItem("highscore");
+        // Tracking highscore
+        let highScore = localStorage.getItem("highscore");
         if(highScore == null){
           localStorage.setItem("highscore", 0);
           highScore = 0;
@@ -187,63 +210,40 @@ class Play extends Phaser.Scene {
       
         }
 
-        //extended class update
+        // extended class update
         this.p1Betty.update(); // runs update function in Betty.js
         this.ground.update();
         this.ground1.update();
         this.ground2.update();
     
         // check collisions
-        /*
-        this.collected = false;
-        if(this.checkCollision(this.p1Betty, this.coin)){
-            this.collected = true;
-        }
 
-        if(this.collected == true){
-            this.collected = false;
-            this.p1Score += 1;
-            game.settings.gameTimer += 500;
-            this.coin.destroy();
-        }
-        */
-    }
-      
+       
+    } // end of update function
+
+    // More Time UI 
     formatTime(milliseconds){
         return milliseconds / 1000;
     }
 
-    /*
     onEvent(){
         if(this.timer > 0){
             this.timer -= 1;
         }
-        this.Right.setText(this.timer);
-    }*/
-      
-    checkCollision(rocket, ship){
-        //simple AABB checking
-        if (rocket.x < ship.x + ship.width &&
-            rocket.x + rocket.width > ship.x &&
-            rocket.y < ship.y + ship.height &&
-            rocket.height + rocket.y + ship.y){
-                return true;
-        }else{
-            return false;
-        }
+        this.timerRight.setText(this.timer);
     }
-
-    pickCoin(){;
+    // Collectibles
+    
+      pickCoin(){   
         this.p1Score += 1;
-        game.settings.gameTimer += 500;
+        this.timer += 10;
+        this.bg_1.tilePositionX++;
         this.sfxCoin.play();
         this.coin.destroy();
-    }
-
-    pickShoe(){;
-        //this.countdown = this.time.delayedCall(100, () =>{
-        //},null,this);
-        this.p1Score += 5; 
+      } 
+   
+    pickShoe(){
+      // possibly make a higher jump out of this? 
         this.sfxShoe.play();
         this.shoe.destroy();
     }

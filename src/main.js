@@ -77,7 +77,8 @@ let game = new Phaser.Game(config);
 
 // define game settings
 game.settings = {
-  gameTimer: 15000, 
+  // 30 second timer
+  gameTimer: 30000, 
 }
 
 let music;

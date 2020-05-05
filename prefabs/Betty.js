@@ -17,10 +17,10 @@ class Betty extends Phaser.GameObjects.Sprite {
 
       // left/right movement
       if(keyLEFT.isDown && this.x >= 0){
-        //speed depends on this
-        this.x -= 2;
+        // speed depends on this
+        this.x -= 4;
       }else if (keyRIGHT.isDown && this.x <= 600){
-        this.x += 2;
+        this.x += 4;
       }
 
       //jumping
