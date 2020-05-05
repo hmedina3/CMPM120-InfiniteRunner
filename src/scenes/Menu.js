@@ -2,12 +2,17 @@ class Menu extends Phaser.Scene {
     constructor() {
         super("menuScene");
     }
+
     preload() {
+      
+       // background music
+       this.load.audio('sfx_music', './assets/bensound-dance.mp3'); // Music: https://www.bensound.com
+
         // load audio
         this.load.audio('sfx_select', './assets/Punching_Designed6.wav');  // https://gamesounds.xyz
         this.load.audio('sfx_jump', './assets/HITS - 05.wav'); // https://gamesounds.xyz
-        // background music
-        this.load.audio('sfx_music', './assets/bensound-dance.mp3'); // Music: https://www.bensound.com
+
+       
         // background picture
         this.load.image('background','./assets/cavernous.png'); // https://opengameart.org/content/cavernous-background
     }

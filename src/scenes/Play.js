@@ -5,27 +5,30 @@ class Play extends Phaser.Scene {
     }
     
     preload() {
+        // background music
+        this.load.audio('sfx_music', './assets/bensound-dance.mp3'); // Music: https://www.bensound.com
 
         // load audio
+        this.load.audio('sfx_power', './assets/powerup.wav'); //https://freesound.org/people/evan.schad/sounds/470768/
+        this.load.audio('sfx_coin', './assets/collectcoin.wav'); //https://freesound.org/people/bradwesson/sounds/135936/ 
+        this.load.audio('sfx_jump', './assets/small-jump-for-videogames.wav'); //https://freesound.org/people/simoneyoh3998/sounds/500675/
         this.load.audio('sfx_stab', './assets/stab.wav'); //https://freesound.org/people/InspectorJ/sounds/413496/
         this.load.audio('sfx_throw', './assets/throw.wav'); //https://freesound.org/people/kylepyke/sounds/196562/
        
         // load images/tile sprites
         this.load.image('betty','./assets/betty1.png'); //https://opengameart.org/content/one-more-lpc-alternate-character
         this.load.image('ground','./assets/RockTileSet2020.png'); // https://opengameart.org/content/stone-ground
-       
-        // load borders
-        
+            
         // background picture
         this.load.image('background','./assets/cavernous.png'); //https://opengameart.org/content/cavernous-background
         
         // load spritesheet
-        this.load.spritesheet('explosion','./assets/boom.png',{frameWidth: 192, frameheight: 191, startFrame: 0, endFrame: 20}); //https://www.subpng.com/png-1mtyxe/
+        this.load.spritesheet('coin','./assets/spin_coin_big_strip6.png',{frameWidth: 192, frameheight: 191, startFrame: 0, endFrame: 20});
     }
 
     create() {
 
-      // This will make the background move as a parallax scroller.
+      // This will make the background move as a parallax scroller. - H.
       this.bg_1 = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background');
       this.bg_1.setScale(1.8);
       this.bg_1.setOrigin(0, 0);
@@ -46,7 +49,18 @@ class Play extends Phaser.Scene {
         // UI to keep track of points
        
         // add blocks / death pits
-        
+        //let ground = this.physics.add.sprite(game.config.width/2,game.config.height*.95, 'ground');
+
+        //trying something right here
+        this.ground1 = new Ground(this,game.config.width/2,game.config.height*.95,'ground');
+        this.physics.add.existing(this.ground1);
+        this.ground2 = new Ground(this,50,game.config.height*.95,'ground');
+        this.physics.add.existing(this.ground2);
+        this.ground1.body.immovable = true;
+        this.ground2.body.immovable = true;
+
+        //ground.displayWidth = game.config.width*1.1;
+        //ground.setImmovable();
 
         // borders?
         
@@ -89,21 +103,7 @@ class Play extends Phaser.Scene {
         
         // Time UI
     
-        //this.timer = this.formatTime(game.settings.gameTimer);
-        //this.Right = this.add.text(500, 54, this.timer, timeUIConfig);
-
-        //var timeInSeconds;
-        //timeInSeconds = this.time.addEvent({delay:1000, callback: this.onEvent, callbackScope: this, loop:true});
-        // places score
-        // this.scoreLeft = this.add.text(69, 54, this.p1Score, scoreConfig);
-        // game over flag
         this.gameOver = false;
-        /*
-        scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-        music.stop();
-        this.add.text(game.config.width/2, game.config.height/2 + 100, "Current Highscore: "+localStorage.getItem("highscore"),highScoreConfig).setOrigin(0.5);
-        */
 
     }   // end of create
 
@@ -114,7 +114,8 @@ class Play extends Phaser.Scene {
         // timer going down each second
         game.settings.gameTimer = game.settings.gameTimer - 1000;
 
-        if(game.settings.gameTimer <= 0){
+        // move to death scene once timer runs out or if betty runs into death pits
+        if(game.settings.gameTimer <= 0 || this.p1Betty.y > game.config.height){
             this.gameOver = true;
          // move to death scene once timer runs out
             music.stop();
@@ -131,28 +132,30 @@ class Play extends Phaser.Scene {
         
         }
           
-            //Tracking highscore
-            /*var highScore = localStorage.getItem("highscore");
-            if(highScore == null){
-              localStorage.setItem("highscore", 0);
-              highScore = 0;
-            }
-            else if(this.p1Score > highScore){
-                localStorage.setItem("highscore", this.p1Score);
-            }
-            */
+        //Tracking highscore
+        /*var highScore = localStorage.getItem("highscore");
+        if(highScore == null){
+          localStorage.setItem("highscore", 0);
+          highScore = 0;
+        }
+        else if(this.p1Score > highScore){
+            localStorage.setItem("highscore", this.p1Score);
+        }
+        */
 
-            // check key input for restart during the game
-            if(Phaser.Input.Keyboard.JustDown(keyR)){
-
-                //resets score
-                this.scene.restart(this.p1Score);
-
-                this.scene.start('playScene');
-          
-            }
-        
-            // check collisions
+        // check key input for restart during the game
+        if(Phaser.Input.Keyboard.JustDown(keyR)){
+            
+            //resets score and timer
+            this.scene.restart(this.p1Score);
+            game.settings.gameTimer = 15000;
+            this.bgm.destroy();
+            this.scene.start('playScene');
+      
+        }
+        this.p1Betty.update();
+    
+        // check collisions
         
     }
       
