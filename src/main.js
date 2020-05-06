@@ -1,8 +1,9 @@
 /*
-NOTE*:
-
-I have implemented a code base for this project. Feel free to add other .js files.
-If you do decide to add other .js files please let me know as soon as possible.
+Hector Medina
+Yongshi Sun
+Game title: Betty's Escape
+Date completed: 
+Creative tilt: 
 
 */
 let config = {
@@ -10,9 +11,11 @@ let config = {
     width: 640,
     height: 480,
     scene: [Menu, Play],
-    physics:{
-        default: 'arcade',
-        arcade: {debug:true} //debug put boxes over your objects w/ physics and velocity
+    physics: {
+      default: 'arcade',
+      arcade: {
+        debug: true //debug put boxes over your objects w/ physics and velocity
+      }
     }
 }
 
@@ -43,7 +46,7 @@ let timerConfig = {
   },
   fixedWidth: 100
 }
-
+// highscore display
 let highScoreConfig = {
   fontFamily: 'Impact',
   fontSize: '35px',
@@ -56,7 +59,7 @@ let highScoreConfig = {
   },
   fixedWidth: 350
 }
-
+// death scene display 
 let deathConfig = {
   fontFamily: 'Courier',
   fontSize: '28px',
@@ -80,5 +83,5 @@ game.settings = {
   // 30 second timer
   gameTimer: 30000, 
 }
-
+// global music variable
 let music;

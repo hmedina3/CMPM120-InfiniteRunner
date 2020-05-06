@@ -8,7 +8,6 @@ class Betty extends Phaser.GameObjects.Sprite {
         
         scene.add.existing(this); // add object to existing scene
         this.isJumping = false; // tracks players jumping status
-
         // adds jump audio
         this.sfxJump = scene.sound.add('sfx_jumpup');
     }
@@ -30,8 +29,8 @@ class Betty extends Phaser.GameObjects.Sprite {
         this.sfxJump.play(); // play sfx
       }
 
-        //only allow jump if betty is touching ground (to prevent double jump)
-        if(this.body.velocity.y ==0){
+        // only allow jump if betty is touching ground (to prevent double jump)
+        if(this.body.velocity.y == 0){
             this.isJumping = false;
         }
       

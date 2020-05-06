@@ -33,6 +33,8 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        var player;
+        var coins;
 
         // This will make the background move as a parallax scroller. - H.
         this.bg_1 = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background');
@@ -74,9 +76,9 @@ class Play extends Phaser.Scene {
         
         
         // adding coins at y and x axis
-        this.coin = this.add.sprite(100,300,'coin');
-        this.coin.anims.play('rotate', true);
-        this.physics.add.existing(this.coin);
+      //  this.coin = this.add.sprite(100,300,'coin');
+       // this.coin.anims.play('rotate', true);
+       // this.physics.add.existing(this.coin);
 
         this.shoe = this.add.sprite(300,300,'shoe');
         this.physics.add.existing(this.shoe);
@@ -88,15 +90,15 @@ class Play extends Phaser.Scene {
         this.physics.add.existing(this.ground2);
 
         // main character postion
-        this.p1Betty = new Betty(this, game.config.width/2,300,'betty').setScale(1.5,1.5).setOrigin(0,0);
-        this.physics.add.existing(this.p1Betty); //adding physics to betty
-        this.p1Betty.body.setSize(30,32,0,0); //setting collision box size
-        this.p1Betty.body.gravity.y = 100; //adding gravity
+        player = new Betty(this, game.config.width/2,300,'betty').setScale(1.5,1.5).setOrigin(0,0);
+        this.physics.add.existing(player); //adding physics to betty
+        player.body.setSize(30,32,0,0); //setting collision box size
+        player.body.gravity.y = 100; //adding gravity
 
         // define movement and colliders
-        this.physics.add.collider(this.p1Betty,this.ground1);
-        this.physics.add.collider(this.p1Betty,this.ground2);
-        this.physics.add.collider(this.p1Betty,this.ground);
+        this.physics.add.collider(player,this.ground1);
+        this.physics.add.collider(player,this.ground2);
+        this.physics.add.collider(player,this.ground);
         
         // define keyboard keys for movement
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -114,47 +116,54 @@ class Play extends Phaser.Scene {
         timeInSeconds = this.time.addEvent({delay:1000, callback: this.onEvent, callbackScope: this, loop:true})
        
         // when player collects coins
-            let x = 15;
-            let y = 300;
-            switch (Phaser.Math.Between(0, 1)) {
-                case 0: x = Phaser.Math.Between(15, this.game.renderer.width);
-                    break;
-                case 1: y = 300;
-            }
-            // spawn 2
-            this.group = this.physics.add.group();
-            for (let i = 0; i < 2; i++) {
-                
-                this.group.add(this.add.sprite(x,y,'coin'));
-                
-            }
-            for (let i = 0; i <this.group.getChildren().length; i++) {
-                this.coin = this.group.getChildren()[i];
-                this.coin.anims.play('rotate', true);
-                this.physics.add.existing(this.coin);
-                this.physics.add.overlap(this.p1Betty, this.coin, this.pickCoin(this.group.getChildren()[i]), null, this);
-            }
-
             
+            // spawn 3
+            this.coinGroup = this.physics.add.group();
+            for (let i = 0; i < 3; i++) {
 
+                 let x = 15;
+                 let y = 300;
+                 switch (Phaser.Math.Between(0, 1)) {
+                    case 0: x = Phaser.Math.Between(15, this.game.renderer.width);
+                        break;
+                    case 1: y = 300;
+                }
+                coins = this.add.sprite(x,y,'coin');
+                this.physics.add.existing(this.coin);
+                this.coinGroup.add(coins);
+                
+            }
+            // plays anims for coins
+            for (let i = 0; i <this.coinGroup.getChildren().length; i++) {
+                this.newCoin = this.coinGroup.getChildren()[i];
+                this.newCoin.anims.play('rotate', true);     
+            }
+
+            this.physics.add.overlap(player, coins, collectCoin, null, this);
+
+            // this one works but only deletes one coin
+         //   this.physics.add.overlap(this.p1Betty,this.newCoin,this.pickCoin,null,this);
          // game ends
         this.gameOver = false;
 
     }   // end of create
 
-    
-    pickCoin(coin){   
+      collectCoin (coins) {
+      coins.disableBody(true, true);
+      
+        //  Add and update the score
         this.p1Score += 1;
         this.timer += 10;
-        this.bg_1.tilePositionX++;
+        // play audio
         this.sfxCoin.play();
-        coin.destroy();
-      } 
+      }
    
 
     update() {
-
+         
         // overlap detection with powerups and coins
+        
+      
       //  this.physics.add.overlap(this.p1Betty,this.coin,this.pickCoin,null,this);
 
         this.physics.add.overlap(this.p1Betty,this.shoe,this.pickShoe,null,this); 
@@ -233,14 +242,6 @@ class Play extends Phaser.Scene {
         this.timerRight.setText(this.timer);
     }
     // Collectibles
-    
-      pickCoin(){   
-        this.p1Score += 1;
-        this.timer += 10;
-        this.bg_1.tilePositionX++;
-        this.sfxCoin.play();
-        this.coin.destroy();
-      } 
    
     pickShoe(){
       // possibly make a higher jump out of this? 
@@ -250,3 +251,6 @@ class Play extends Phaser.Scene {
    
 
 }   // end of Play.js
+
+
+  
