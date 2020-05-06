@@ -42,20 +42,30 @@ class Menu extends Phaser.Scene {
         },
         fixedWidth: 0
     }
-
+    let instructConfig = {
+      fontFamily: 'Helvetica',
+      fontSize: '20px',
+      color: '#00ff00',
+      align: 'right',
+      padding: {
+          top: 5,
+          bottom: 5,
+      },
+      fixedWidth: 0
+  }
     let centerX = game.config.width/2;
     let centerY = game.config.height/2;
     let textSpacer = 64;
 
-    this.add.text(centerX, centerY- textSpacer, 'The Great Escape!', menuConfig).setOrigin(0.5);
-    this.add.text(centerX, centerY, 'Press Spacebar to Jump', menuConfig).setOrigin(0.5);
+    this.add.text(centerX, centerY- textSpacer, "Betty's Great Escape!", menuConfig).setOrigin(0.5);
+    this.add.text(centerX, centerY, '☛ Press Spacebar to Jump. Press ← → to Move. ☚', instructConfig).setOrigin(0.5);
     menuConfig.backgroundColor = '#00ff00';
     menuConfig.color = '#000';
-    this.add.text(centerX, centerY + textSpacer, 'Press ➙ to Escape', menuConfig).setOrigin(0.5);
+    this.add.text(centerX, centerY + textSpacer, '«    » to Make your Escape⚠️', menuConfig).setOrigin(0.5);
 
      // define keys
      keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-     keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    // keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
     }
 
@@ -63,7 +73,7 @@ class Menu extends Phaser.Scene {
       // scrolls the background
       this.bg_1.tilePositionX += 0.3;
 
-      if (Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
+      if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
         // starts game
         game.settings = {
           //BlockSpeed: 4,

@@ -3,7 +3,7 @@ class Play extends Phaser.Scene {
     constructor() {
         super("playScene");
     }
-    
+
     preload() {
         // background music
         this.load.audio('sfx_music', './assets/bensound-dance.mp3'); // Music: https://www.bensound.com
@@ -251,6 +251,3 @@ class Play extends Phaser.Scene {
    
 
 }   // end of Play.js
-
-
-  
