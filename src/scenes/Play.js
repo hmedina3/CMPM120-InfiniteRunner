@@ -32,10 +32,8 @@ class Play extends Phaser.Scene {
         
     }
 
-    create() {
-        //var player;
-        //var coins;
-
+    create()  {
+        
         // This will make the background move as a parallax scroller. - H.
         this.bg_1 = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background');
         this.bg_1.setScale(1.8);
@@ -116,9 +114,9 @@ class Play extends Phaser.Scene {
         let timeInSeconds;
         timeInSeconds = this.time.addEvent({delay:1000, callback: this.onEvent, callbackScope: this, loop:true})
        
-        // when player collects coins
-            
-            // spawn 3
+        // When player collects coins
+
+            // spawn 3 coins
             this.coinGroup = this.physics.add.group();
             for (let i = 0; i < 3; i++) {
 
@@ -131,8 +129,7 @@ class Play extends Phaser.Scene {
                 }
                 this.coins = this.add.sprite(x,y,'coin');
                 this.physics.add.existing(this.coins);
-                this.coinGroup.add(this.coins);
-                
+                this.coinGroup.add(this.coins);     
             }
             // plays anims for coins
             for (let i = 0; i <this.coinGroup.getChildren().length; i++) {
@@ -140,10 +137,6 @@ class Play extends Phaser.Scene {
                 this.newCoin.anims.play('rotate', true);     
             }
 
-            //this.physics.add.overlap(player, coins, collectCoin, null, this);
-
-            // this one works but only deletes one coin
-         //   this.physics.add.overlap(this.p1Betty,this.newCoin,this.pickCoin,null,this);
          // game ends
         this.gameOver = false;
 
@@ -151,12 +144,19 @@ class Play extends Phaser.Scene {
    
 
     update() {
-         
+        
         // overlap detection with powerups and coins
-        //looping over all the chilren to see which one is overlapping and to destroy
+        // looping over all the children to see which one is overlapping and to destroy
         for(let k = 0; k < this.coinGroup.getChildren().length; k++){
             this.one = this.coinGroup.getChildren()[k];
-            this.physics.add.overlap(this.player,this.one,this.collectCoin,null,this);
+            if(this.physics.overlap(this.player,this.one) == true){
+                this.one.destroy();
+                // keep track of score 
+                this.p1Score += 1;
+                this.timer += 10;
+                //play audio
+                this.sfxCoin.play();
+            }
         }
         this.physics.add.overlap(this.player,this.shoe,this.pickShoe,null,this); 
 
@@ -164,7 +164,7 @@ class Play extends Phaser.Scene {
         this.ground.body.immovable = true;
 
         // scrolls the background
-        this.bg_1.tilePositionX += 0.3;
+        this.bg_1.tilePositionX += 0.5;
         
         // show score
         this.scoreLeft = this.add.text(55, 5, this.p1Score, scoreConfig);
@@ -233,18 +233,7 @@ class Play extends Phaser.Scene {
         }
         this.timerRight.setText(this.timer);
     }
-    // Collectibles
 
-    collectCoin(){
-        //Add and update the score
-        this.one.destroy();
-        this.p1Score += 1;
-        this.timer += 10;
-        //play audio
-        this.sfxCoin.play();
-        
-    }
-   
     pickShoe(){
         //possibly make a higher jump out of this? 
         game.settings.shoe = true;
