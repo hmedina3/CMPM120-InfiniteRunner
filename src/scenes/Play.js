@@ -123,9 +123,11 @@ class Play extends Phaser.Scene {
                  let x = 15;
                  let y = 300;
                  switch (Phaser.Math.Between(0, 1)) {
-                    case 0: x = Phaser.Math.Between(15, this.game.renderer.width);
+                    case 0: x = Phaser.Math.Between(50, this.game.renderer.width);
+                            y = y = Phaser.Math.Between(100, 300);
                         break;
-                    case 1: y = 300;
+                    case 1: x = Phaser.Math.Between(50, this.game.renderer.width); 
+                            y = 300;
                 }
                 this.coins = this.add.sprite(x,y,'coin');
                 this.physics.add.existing(this.coins);
