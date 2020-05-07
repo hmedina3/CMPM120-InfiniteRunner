@@ -37,7 +37,15 @@ class Betty extends Phaser.GameObjects.Sprite {
     }
     
     jump(){
-      this.body.velocity.y = -150; //setVelocityY(-100)
+      if(game.settings.shoe == true){
+        this.body.velocity.y = -200;
+        /*this.countdown = this.time.delayedCall(100, () =>{
+          this.body.velocity.y = -150;
+          game.settings.shoe = false;
+        },null,this);*/
+      }else{
+        this.body.velocity.y = -150; //setVelocityY(-100)
+      }
     }
 
   } // end of Betty class
