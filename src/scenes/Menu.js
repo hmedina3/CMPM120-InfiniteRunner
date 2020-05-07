@@ -61,11 +61,11 @@ class Menu extends Phaser.Scene {
     this.add.text(centerX, centerY, '☛ Press Spacebar to Jump. Press ← → to Move. ☚', instructConfig).setOrigin(0.5);
     menuConfig.backgroundColor = '#00ff00';
     menuConfig.color = '#000';
-    this.add.text(centerX, centerY + textSpacer, '«    » to Make your Escape⚠️', menuConfig).setOrigin(0.5);
+    this.add.text(centerX, centerY + textSpacer, 'Make your Escape⚠️', menuConfig).setOrigin(0.5);
+    this.add.text(centerX, centerY + textSpacer + 50, '«press space»', instructConfig).setOrigin(0.5);
 
      // define keys
      keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    // keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
     }
 
