@@ -125,9 +125,11 @@ class Play extends Phaser.Scene {
                  let x = 15;
                  let y = 300;
                  switch (Phaser.Math.Between(0, 1)) {
-                    case 0: x = Phaser.Math.Between(15, this.game.renderer.width);
+                    case 0: x = Phaser.Math.Between(50, this.game.renderer.width);
+                            y = y = Phaser.Math.Between(100, 300);
                         break;
-                    case 1: y = 300;
+                    case 1: x = Phaser.Math.Between(50, this.game.renderer.width); 
+                            y = 300;
                 }
                 this.coins = this.add.sprite(x,y,'coin');
                 this.physics.add.existing(this.coins);
@@ -156,7 +158,14 @@ class Play extends Phaser.Scene {
         //looping over all the chilren to see which one is overlapping and to destroy
         for(let k = 0; k < this.coinGroup.getChildren().length; k++){
             this.one = this.coinGroup.getChildren()[k];
-            this.physics.add.overlap(this.player,this.one,this.collectCoin,null,this);
+            if(this.physics.overlap(this.player,this.one) == true){
+                this.one.destroy();
+                this.p1Score += 1;
+                this.timer += 10;
+                //play audio
+                this.sfxCoin.play();
+            }
+            //this.physics.add.overlap(this.player,this.one,this.collectCoin,null,this);
         }
         this.physics.add.overlap(this.player,this.shoe,this.pickShoe,null,this); 
 
